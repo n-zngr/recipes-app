@@ -1,0 +1,10 @@
+{
+    "name": "recipes-app",
+    "private": true,
+    "scripts": {
+      "dev": "npm --prefix frontend run dev",
+      "build": "npm --prefix frontend run build",
+      "serve": "npm --prefix frontend run preview",
+      "backend": "cd backend && uvicorn main:app --reload"
+    }
+  }
