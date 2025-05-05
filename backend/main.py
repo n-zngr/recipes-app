@@ -2,7 +2,8 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api import recipes # Your router module
+from api import recipes
+from api import ingredients
 
 app = FastAPI()
 
@@ -15,8 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Include Routers ---
-app.include_router(recipes.router) # Include the router from api/recipes.py
+app.include_router(ingredients.router)
+app.include_router(recipes.router)
 
 # --- Root Endpoint (Optional) ---
 @app.get("/")
