@@ -177,4 +177,8 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Firebase Database
 firebase
+
+# Model
+*.pkl
