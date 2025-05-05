@@ -11,5 +11,11 @@ To get started on this project, follow the steps below to get started.
 ## Running Backend
 - Ensure you have the latest version of Python installed
 - Head over to the `backend` directory, through `cd backend` in your terminal
+- Create a virtual environment, by using `py -m venv venv`
 - use `venv/Scripts/activate` to enter the virtual environment of the project
   - You can ensure whether this worked, through the `(venv)` prefix in your terminal
+- Install the respective pip dependencies inside the `backend` directory.
+
+```bs
+pip install fastapi uvicorn pandas numpy scikit-learn joblib python-dotenv
+```
