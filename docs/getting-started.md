@@ -17,5 +17,5 @@ To get started on this project, follow the steps below to get started.
 - Install the respective pip dependencies inside the `backend` directory.
 
 ```bs
-pip install fastapi uvicorn pandas numpy scikit-learn joblib python-dotenv
+pip install fastapi uvicorn pandas numpy scikit-learn joblib python-dotenv firebase-admin
 ```
