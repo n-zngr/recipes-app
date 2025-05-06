@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 #from backend.api.recipes import recipes
 #from backend.api.ingredients import ingredients
 from api.users import users
+from api.households import households
 
 app = FastAPI()
 
@@ -27,6 +28,7 @@ except Exception as error:
 #app.include_router(ingredients.router)
 #app.include_router(recipes.router)
 app.include_router(users.router)
+app.include_router(households.router)
 
 @app.get("/")
 async def root():
