@@ -14,6 +14,10 @@ To get started on this project, follow the steps below to get started.
 - Create a virtual environment, by using `py -m venv venv`
 - use `venv/Scripts/activate` to enter the virtual environment of the project
   - You can ensure whether this worked, through the `(venv)` prefix in your terminal
+
+> [!CAUTION]
+> To ensure you are in the virtual environment after startup, you must use the command again. `venv/Scripts/activate` 
+
 - Install the respective pip dependencies inside the `backend` directory.
 
 ```bs
