@@ -6,6 +6,7 @@ from firebase import db
 router = APIRouter(prefix="/households", tags=["households"])
 
 HOUSEHOLDS_COLLECTION = "households"
+USERS_COLLECTION = "users"
 
 class Household(BaseModel):
     name: str
@@ -18,8 +19,13 @@ def get_households():
 
 @router.post("/")
 def create_household(household: Household):
-    households_ref = db.collection(HOUSEHOLDS_COLLECTION)
-    households_ref.add(household.dict())
+    user_id = household.users[0]
+    user_doc = db.collection(USERS_COLLECTION).document(user_id).get()
+
+    if not user_doc.exists:
+        raise HTTPException(status_code=404, detail=f"User id {user_id} does not exist")
+
+    db.collection(HOUSEHOLDS_COLLECTION).add(household.dict())
     return {"message": "Household created successfully"}
 
 @router.delete("/{name}")
