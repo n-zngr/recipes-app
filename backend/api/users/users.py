@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel
 from firebase import db
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -10,14 +11,53 @@ class User(BaseModel):
     email: str
     password: str
 
-@router.post("/")
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    message: str
+
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_user(user: User):
     users_ref = db.collection(USERS_COLLECTION)
     existing = users_ref.where("email", "==", user.email).get()
+    
     if existing:
-        raise HTTPException(status_code=400, detail="User already exists")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User already exists"
+        )
+    
     users_ref.add(user.dict())
     return {"message": "User created successfully"}
+
+@router.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    users_ref = db.collection(USERS_COLLECTION)
+    query = users_ref.where("email", "==", form_data.username).limit(1)
+    docs = query.get()
+    
+    if not docs:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password"
+        )
+    
+    user_data = docs[0].to_dict()
+    
+    # Direkter Passwortvergleich (ohne Hashing)
+    if form_data.password != user_data["password"]:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password"
+        )
+    
+    # In einem echten System würden Sie hier ein Token generieren
+    # Für dieses Beispiel geben wir einfach eine Erfolgsmeldung zurück
+    return {
+        "access_token": "simulated-token",  # Nur für Demo-Zwecke
+        "token_type": "bearer",
+        "message": "Login successful!"
+    }
 
 @router.get("/")
 def get_users(): 

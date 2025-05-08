@@ -1,39 +1,60 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 
-const Signup = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Prefill email if coming from signup
+  useEffect(() => {
+    if (location.state?.prefillEmail) {
+      setEmail(location.state.prefillEmail);
+    }
+  }, [location.state]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8000/users/', {
+      const body = new URLSearchParams();
+      body.append('username', email);
+      body.append('password', password);
+
+      const response = await fetch('http://localhost:8000/users/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: body.toString(),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Registration failed');
+        throw new Error(errorData.detail || 'Login failed');
       }
 
-      // After successful signup, redirect to login with the email prefilled
-      navigate('/login', { state: { prefillEmail: email } });
+      const data = await response.json();
+      
+      // Speichere das Token im localStorage
+      localStorage.setItem('token', data.access_token);
+      
+      // Zeige Erfolgsmeldung an
+      setSuccess(data.message || 'Erfolgreich eingeloggt!');
+      
+      // Weiterleitung nach 1.5 Sekunden
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : 'Login fehlgeschlagen');
     } finally {
       setLoading(false);
     }
@@ -46,9 +67,11 @@ const Signup = () => {
       padding: '2rem',
       boxShadow: '0 0 10px rgba(0,0,0,0.1)' 
     }}>
-      <h2 style={{ textAlign: 'center' }}>Registrieren</h2>
+      <h2 style={{ textAlign: 'center' }}>Login</h2>
       {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
+      {success && <div style={{ color: 'green', marginBottom: '1rem' }}>{success}</div>}
+      
+      <form onSubmit={handleLogin}>
         <div style={{ marginBottom: '1rem' }}>
           <label>Email:</label>
           <input
@@ -94,14 +117,15 @@ const Signup = () => {
             cursor: 'pointer'
           }}
         >
-          {loading ? 'Wird verarbeitet...' : 'Registrieren'}
+          {loading ? 'Loggt ein...' : 'Login'}
         </button>
       </form>
+
       <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-        Bereits ein Konto? <Link to="/login" style={{ color: '#007bff' }}>Anmelden</Link>
+        Noch kein Konto? <Link to="/signup" style={{ color: '#007bff' }}>Registrieren</Link>
       </div>
     </div>
   );
 };
 
-export default Signup;
+export default Login;
