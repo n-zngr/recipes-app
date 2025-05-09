@@ -44,17 +44,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     
     user_data = docs[0].to_dict()
     
-    # Direkter Passwortvergleich (ohne Hashing)
     if form_data.password != user_data["password"]:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
     
-    # In einem echten System würden Sie hier ein Token generieren
-    # Für dieses Beispiel geben wir einfach eine Erfolgsmeldung zurück
     return {
-        "access_token": "simulated-token",  # Nur für Demo-Zwecke
+        "access_token": "simulated-token",  # Placeholder token, will contain userId in future
         "token_type": "bearer",
         "message": "Login successful!"
     }
