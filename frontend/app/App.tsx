@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, ChangeEvent, KeyboardEvent, FocusEvent } from "react";
 import { Home, Plus, Edit, Settings, Trash2 } from "lucide-react";
+import recipe_book from "./assets/recipe-book.svg";
 
 interface Recipe {
     id: number;
@@ -47,7 +48,7 @@ const App: React.FC = () => {
     const [newIngredient, setNewIngredient] = useState<string>('');
     const [isAddingIngredient, setIsAddingIngredient] = useState<boolean>(false)
     const ingredientInputRef = useRef<HTMLInputElement>(null);
-    const [recipes, setRecipes] = useState<Recipe[]>(placeholderRecipes);
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
     
     useEffect(() => {
         if (isAddingIngredient && ingredientInputRef.current) {
@@ -94,7 +95,7 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-brown text-brown-dark border-brown-dark/50 antialiased overflow-hidden">
+        <div className="flex flex-col h-screen bg-white text-brown border-brown/50 antialiased overflow-hidden">
             <div className="w-full h-16 flex gap-4 items-center pl-4 border-b shrink-0">
                 <div className="pt-1">
                     <Home size="24px" strokeWidth={1}/>
@@ -104,11 +105,11 @@ const App: React.FC = () => {
             </div>
             <div className="flex flex-1 overflow-hidden">
                 <aside className="w-72 flex flex-col ml-2 my-2 border rounded-md">
-                    <div className="flex items-center justify-between p-2 pb-2 border-b border-brown-dark shrink-0">
+                    <div className="flex items-center justify-between p-2 pb-2 border-b border-brown shrink-0">
                         <h2 className="font-medium">Zutatenliste</h2>
                         <button
                             onClick={handleShowInput}
-                            className="w-6 h-6 flex items-center justify-center bg-green hover:bg-brown-dark border border-brown-dark/50 text-xl font-semibold text-brown rounded-sm transition-colors duration-200 focus:outline-none"
+                            className="w-6 h-6 flex items-center justify-center bg-green hover:bg-brown border border-brown/50 text-xl font-semibold text-white rounded-sm transition-colors duration-200 focus:outline-none"
                             aria-label="Add new ingredient"
                         >
                             <Plus size="16px" />
@@ -125,7 +126,7 @@ const App: React.FC = () => {
                                 onKeyDown={handleInputKeyDown}
                                 onBlur={handleInputBlur}
                                 placeholder="Neue Zutat"
-                                className="w-full px-2 py-2 mt-2 text-sm focus:ring-0 focus:outline-none transition-colors duration-200 border-b border-brown-dark"
+                                className="w-full px-2 py-2 mt-2 text-sm focus:ring-0 focus:outline-none transition-colors duration-200 border-b border-brown"
                             />
                         </div>
                     )}
@@ -134,21 +135,24 @@ const App: React.FC = () => {
                         {ingredients.map((ingredient, index) => (
                             <li
                                 key={index}
-                                className="group flex items-center justify-between px-2 py-2 text-sm border border-brown-dark rounded-sm hover:shadow-sm shadow-brown-dark/25 transition-all duration-200"
+                                className="group flex items-center justify-between px-2 py-2 text-sm border border-brown rounded-sm hover:shadow-sm shadow-brown/25 transition-all duration-200"
                             >
                                 <p>{ingredient}</p>
                                 <div className="flex items-center">
-                                    <button className="text-brown-dark hover:text-red-700 group-hover:opacity-100 group-hover:-translate-x-1 translate-x-4 opacity-0 transition-all duration-200">
+                                    <button className="text-brown hover:text-red-700 group-hover:opacity-100 group-hover:-translate-x-1 translate-x-4 opacity-0 transition-all duration-200">
                                         <Trash2 size="16px" />
                                     </button>
-                                    <button className="text-brown-dark hover:text-green-dark group-hover:opacity-100 opacity-0 transition-all duration-200">
+                                    <button className="text-brown hover:text-green-dark group-hover:opacity-100 opacity-0 transition-all duration-200">
                                         <Edit size="16px" />
                                     </button>
                                 </div>
                             </li>
                         ))}
                         {ingredients.length === 0 && !isAddingIngredient && (
-                            <p className="mt-4 text-sm text-center text-gray-500">'+' um neue Zutat hinzuzufügen.</p>
+                            <div className="flex flex-col justify-center items-center">
+                                <img src={recipe_book} alt="" />
+                                <p className="mt-4 text-sm text-center">'+' um neue Zutat hinzuzufügen.</p>
+                            </div>
                         )}
                     </ul>
                 </aside>
@@ -157,17 +161,17 @@ const App: React.FC = () => {
                     <div className="max-w-3xl mx-auto space-y-6">
                         {recipes.length > 0 ? (
                             recipes.map((recipe) => (
-                                <div key={recipe.id} className="p-4 border border-brown-dark rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200">
-                                    <h3 className="pb-2 mb-3 text-2xl border-b border-brown-dark">
+                                <div key={recipe.id} className="p-4 border border-brown rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200">
+                                    <h3 className="pb-2 mb-3 text-2xl border-b border-brown">
                                         {recipe.title}
                                     </h3>
                                     <div className="mb-3">
-                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown-dark uppercase">Key Ingredients:</strong>
-                                        <p className="text-sm text-brown-dark">{recipe.ingredients.join(', ')}</p>
+                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown uppercase">Key Ingredients:</strong>
+                                        <p className="text-sm text-brown">{recipe.ingredients.join(', ')}</p>
                                     </div>
                                     <div>
-                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown-dark uppercase">Method:</strong>
-                                        <p className="text-sm leading-relaxed text-brown-dark">{recipe.instructions}</p>
+                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown uppercase">Method:</strong>
+                                        <p className="text-sm leading-relaxed text-brown">{recipe.instructions}</p>
                                     </div>
                                 </div>
                             ))

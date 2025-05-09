@@ -1,14 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-    --color-green: #498467;
-    --color-green-dark: #3A6953;
-    --color-brown: #fff8ee;
-    --color-brown-dark: #1d1a17;
+    --color-green: #278C5F;
+    --color-violet: #C684F1;
+    --color-orange: #FAA672;
+    --color-rose: #FF7091;
+    --color-white: #FFF1D7;
+    --color-brown: #2F2B2B;
+    --font-averia: 'Averia Serif Libre';
 }
 
 h1 {
     @apply text-2xl
+}
+
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 ::-webkit-scrollbar {
