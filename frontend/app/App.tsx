@@ -104,8 +104,8 @@ const App: React.FC = () => {
                 <Settings className="ml-auto mr-4" size="24px" strokeWidth={1} />
             </div>
             <div className="flex flex-1 overflow-hidden">
-                <aside className="w-72 flex flex-col ml-2 my-2 border rounded-md">
-                    <div className="flex items-center justify-between p-2 pb-2 border-b border-brown shrink-0">
+                <aside className="w-72 flex flex-col ml-2 my-2 border rounded-lg">
+                    <div className="flex shrink-0 items-center justify-between bg-brown p-2 pb-2 text-white">
                         <h2 className="font-medium">Zutatenliste</h2>
                         <button
                             onClick={handleShowInput}
@@ -150,8 +150,8 @@ const App: React.FC = () => {
                         ))}
                         {ingredients.length === 0 && !isAddingIngredient && (
                             <div className="flex flex-col justify-center items-center">
-                                <img src={recipe_book} alt="" />
-                                <p className="mt-4 text-sm text-center">'+' um neue Zutat hinzuzufügen.</p>
+                                <img className="p-4" src={recipe_book} alt="" />
+                                <p className="mt-4 text-sm text-center">Füge deine erste Zutat hinzu.</p>
                             </div>
                         )}
                     </ul>
