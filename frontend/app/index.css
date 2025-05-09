@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import './assets/fonts/AveriaSerifLibre.css';
+
 @theme {
     --color-green: #278C5F;
     --color-violet: #C684F1;
@@ -39,7 +41,7 @@ img {
 }
 
 :root {
-    font-family: system-ui, Helvetica, Arial, sans-serif;
+    font-family: 'Averia Serif Libre', system-ui, Helvetica, Arial, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
