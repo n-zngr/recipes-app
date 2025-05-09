@@ -4,25 +4,22 @@ from pydantic import BaseModel
 
 import os
 import sys
-import importlib.util # <--- NEW IMPORT
+import importlib.util
 
-# Existing API router imports
 from api.users import users
 from api.households import households
 
-# Get the directory where main.py is located
-current_script_dir = os.path.dirname(os.path.abspath(__file__))
+current_script_dir = os.path.dirname(os.path.abspath(__file__)) # Get current "backend" directory
 
 # Construct the absolute path to predict.py
 # IMPORTANT: Ensure 'backend' and 'model' reflect the correct directory names
 # and structure relative to where your main.py resides.
 predict_module_path = os.path.join(current_script_dir, 'model', 'predict.py')
 
-# Verify if the file exists before attempting to load
 if not os.path.exists(predict_module_path):
     print(f"CRITICAL ERROR: predict.py not found at the expected path: {predict_module_path}")
     print("Please ensure the path 'backend/model/predict.py' is correct relative to your main.py.")
-    sys.exit(1) # Exit the application if the module cannot be found
+    sys.exit(1)
 
 # Load the module directly from its file path
 try:
