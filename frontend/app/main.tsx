@@ -5,9 +5,7 @@ import './index.css';
 import App from './App';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
- // Pfad basierend auf deiner Struktur
 
-// 2. Rendern
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
