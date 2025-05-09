@@ -100,7 +100,7 @@ const App: React.FC = () => {
                 <div className="pt-1">
                     <Home size="24px" strokeWidth={1.5}/>
                 </div>
-                <h1 className="text-2xl font-light">Household</h1>
+                <h1 className="font-light">Household</h1>
                 <Settings className="ml-auto mr-4" size="24px" strokeWidth={1.5} />
             </div>
             <div className="flex flex-1 overflow-hidden">
