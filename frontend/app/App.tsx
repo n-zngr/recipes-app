@@ -51,7 +51,7 @@ const App: React.FC = () => {
         if (isAddingIngredient && ingredientInputRef.current) {
             ingredientInputRef.current.focus();
         }
-    }, [isAddingIngredient])
+    }, [isAddingIngredient]);
 
     const handleShowInput = () => {
         setIsAddingIngredient(true);
@@ -92,74 +92,79 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="flex h-screen bg-gray-900 text-gray-200 antialiased">
-            <div className="absolute top-0 left-0 bottom-0 z-10 flex h-full w-72 flex-col bg-gray-800 p-5 shadow-2xl border-r border-gray-700/60 rounded-r-xl">
-                <div className="flex items-center justify-between pb-4 mb-5 border-b border-gray-700">
-                    <h2 className="text-2xl font-semibold text-gray-100">Ingredients</h2>
-                    <button
-                        onClick={handleShowInput}
-                        className="flex items-center justify-center w-10 h-10 text-3xl font-light text-white transition-colors duration-150 bg-indigo-600 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75"
-                        aria-label="Add new ingredient"
-                    >
-                        +
-                    </button>
-                </div>
-
-                {isAddingIngredient && (
-                <div className="mb-4">
-                    <input
-                    type="text"
-                    ref={ingredientInputRef}
-                    value={newIngredient}
-                    onChange={handleNewIngredientChange}
-                    onKeyDown={handleInputKeyDown}
-                    onBlur={handleInputBlur}
-                    placeholder="Type & press Enter..."
-                    className="w-full p-3 text-sm bg-gray-700 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all duration-150"
-                    />
-                </div>
-                )}
-
-                <ul className="flex-grow pr-1 space-y-2.5 overflow-y-auto">
-                {ingredients.map((ingredient, index) => (
-                    <li
-                    key={index}
-                    className="px-3.5 py-2.5 text-sm bg-gray-700/70 rounded-md text-gray-300 shadow-sm hover:bg-gray-600/70 transition-colors duration-100"
-                    >
-                    {ingredient}
-                    </li>
-                ))}
-                {ingredients.length === 0 && !isAddingIngredient && (
-                    <p className="text-sm text-center text-gray-500">No ingredients added yet.</p>
-                )}
-                </ul>
+        <div className="flex flex-col h-screen bg-brown text-brown-dark border-brown-dark antialiased overflow-hidden">
+            <div className="w-full h-16 flex items-center pl-4 border-b shrink-0">
+                <h1 className="text-2xl font-semibold">Household</h1>
             </div>
+            <div className="flex flex-1 overflow-hidden">
+                <aside className="w-72 flex flex-col p-2 ml-2 my-2 border border-brown-dark rounded-md">
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-brown-dark shrink-0">
+                        <h2>Ingredients</h2>
+                        <button
+                            onClick={handleShowInput}
+                            className="w-6 h-6 flex items-end justify-center bg-green hover:bg-green-dark text-xl font-semibold text-brown rounded-md transition-colors duration-200 focus:outline-none"
+                            aria-label="Add new ingredient"
+                        >
+                            +
+                        </button>
+                    </div>
 
-            <main className="flex-1 h-screen p-8 overflow-y-auto ml-72">
-                <div className="max-w-3xl mx-auto space-y-8">
-                {placeholderRecipes.length > 0 ? (
-                    placeholderRecipes.map((recipe) => (
-                    <div key={recipe.id} className="p-6 bg-gray-800 border border-gray-700/50 rounded-xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                        <h3 className="pb-3 mb-4 text-2xl font-semibold border-b text-indigo-400 border-gray-700">
-                        {recipe.title}
-                        </h3>
-                        <div className="mb-4">
-                        <strong className="block mb-1.5 text-sm font-medium text-gray-400">Key Ingredients:</strong>
-                        <p className="text-sm text-gray-300">{recipe.ingredients.join(', ')}</p>
+                    {isAddingIngredient && (
+                        <div className="shrink-0">
+                            <input
+                                type="text"
+                                ref={ingredientInputRef}
+                                value={newIngredient}
+                                onChange={handleNewIngredientChange}
+                                onKeyDown={handleInputKeyDown}
+                                onBlur={handleInputBlur}
+                                placeholder="Neue Zutat"
+                                className="w-full px-2 py-2 mt-2 text-sm rounded-md shadow-sm transition-colors duration-200"
+                            />
                         </div>
-                        <div>
-                        <strong className="block mb-1.5 text-sm font-medium text-gray-400">Method:</strong>
-                        <p className="text-sm leading-relaxed text-gray-300">{recipe.instructions}</p>
-                        </div>
+                    )}
+
+                    <ul className="flex-grow space-y-2 overflow-y-auto">
+                        {ingredients.map((ingredient, index) => (
+                            <li
+                                key={index}
+                                className="px-2 py-2 text-sm rounded-md shadow-sm transition-colors duration-200"
+                            >
+                                {ingredient}
+                            </li>
+                        ))}
+                        {ingredients.length === 0 && !isAddingIngredient && (
+                            <p className="mt-4 text-sm text-center text-gray-500">No ingredients yet. Click '+' to add.</p>
+                        )}
+                    </ul>
+                </aside>
+
+                <main className="flex-1 p-6 overflow-y-auto"> 
+                    <div className="max-w-3xl mx-auto space-y-6">
+                        {placeholderRecipes.length > 0 ? (
+                            placeholderRecipes.map((recipe) => (
+                                <div key={recipe.id} className="p-4 border border-brown-dark rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200">
+                                    <h3 className="pb-2 mb-3 text-xl font-semibold border-b border-brown-dark">
+                                        {recipe.title}
+                                    </h3>
+                                    <div className="mb-3">
+                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown-dark uppercase">Key Ingredients:</strong>
+                                        <p className="text-sm text-brown-dark">{recipe.ingredients.join(', ')}</p>
+                                    </div>
+                                    <div>
+                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown-dark uppercase">Method:</strong>
+                                        <p className="text-sm leading-relaxed text-brown-dark">{recipe.instructions}</p>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="py-10 text-center">
+                                <p className="text-lg">No recipes available.</p>
+                            </div>
+                        )}
                     </div>
-                    ))
-                ) : (
-                    <div className="py-10 text-center">
-                    <p className="text-lg text-gray-500">No recipes available at the moment.</p>
-                    </div>
-                )}
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     )
 }
