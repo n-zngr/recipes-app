@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import CountVectorizer # Optional: for type
 from scipy.sparse._csr import csr_matrix # Optional: for type hinting
 
 # --- Configuration ---
-MODEL_PATH = "C:/Users/Admin/Desktop/recipes-app/backend/model/model.pkl" # Your correct path
+MODEL_PATH = "model\model.pkl"
 
 # --- Load Objects ---
 _vectorizer: CountVectorizer | None = None
