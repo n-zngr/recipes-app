@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+    --color-green: #498467;
+    --color-green-dark: #3A6953;
+    --color-brown: #fff8ee;
+    --color-brown-dark: #1d1a17;
+}
 
 h1 {
     @apply text-3xl
@@ -26,4 +32,8 @@ h1 {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+    cursor: pointer;
 }
