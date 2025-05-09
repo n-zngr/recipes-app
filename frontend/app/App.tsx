@@ -49,7 +49,6 @@ const App: React.FC = () => {
     const ingredientInputRef = useRef<HTMLInputElement>(null);
     const [recipes, setRecipes] = useState<Recipe[]>(placeholderRecipes);
     
-    
     useEffect(() => {
         if (isAddingIngredient && ingredientInputRef.current) {
             ingredientInputRef.current.focus();
@@ -98,10 +97,10 @@ const App: React.FC = () => {
         <div className="flex flex-col h-screen bg-brown text-brown-dark border-brown-dark/50 antialiased overflow-hidden">
             <div className="w-full h-16 flex gap-4 items-center pl-4 border-b shrink-0">
                 <div className="pt-1">
-                    <Home size="24px" strokeWidth={1.5}/>
+                    <Home size="24px" strokeWidth={1}/>
                 </div>
                 <h1 className="font-light">Household</h1>
-                <Settings className="ml-auto mr-4" size="24px" strokeWidth={1.5} />
+                <Settings className="ml-auto mr-4" size="24px" strokeWidth={1} />
             </div>
             <div className="flex flex-1 overflow-hidden">
                 <aside className="w-72 flex flex-col ml-2 my-2 border rounded-md">
