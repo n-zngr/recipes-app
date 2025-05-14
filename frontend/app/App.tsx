@@ -176,7 +176,7 @@ const App: React.FC = () => {
                                 </div>
                             ))
                         ) : (
-                            <p className="py-10 text-center text-lg font-medium">Füge Zutaten deiner Liste hinzu, um Rezepte anzusehen.</p>
+                            <p className="py-8 text-center text-lg font-medium">Füge Zutaten deiner Liste hinzu, um Rezepte anzusehen.</p>
                         )}
                     </div>
                 </main>
