@@ -105,11 +105,11 @@ const App: React.FC = () => {
             </div>
             <div className="flex flex-1 overflow-hidden">
                 <aside className="w-72 flex flex-col ml-2 my-2 border rounded-lg">
-                    <div className="flex shrink-0 items-center justify-between bg-brown p-2 pb-2 text-white">
+                    <div className="flex shrink-0 items-center justify-between rounded-t-md bg-brown p-2 pb-2 text-white">
                         <h2 className="font-medium">Zutatenliste</h2>
                         <button
                             onClick={handleShowInput}
-                            className="w-6 h-6 flex items-center justify-center bg-green hover:bg-brown border border-brown/50 text-xl font-semibold text-white rounded-sm transition-colors duration-200 focus:outline-none"
+                            className="w-6 h-6 flex items-center justify-center bg-green hover:bg-white border border-brown/50 text-xl font-semibold text-white hover:text-brown rounded-sm transition-colors duration-200 focus:outline-none"
                             aria-label="Add new ingredient"
                         >
                             <Plus size="16px" />
