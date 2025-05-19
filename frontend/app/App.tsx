@@ -56,6 +56,20 @@ const App: React.FC = () => {
         }
     }, [isAddingIngredient]);
 
+    useEffect(() => {
+        const fetchIngredients = async () => {
+            const response = await fetch('http://localhost:8000/households/sl1cdzSAbdpV7eBVOoHv/ingredients') 
+            const data = await response.json();
+            if (response.ok) {
+                setIngredients(data);
+            } else {
+                console.error('Error fetching ingredients:', data);
+            }
+        }
+
+        fetchIngredients();
+    }, []);
+
     const handleShowInput = () => {
         setIsAddingIngredient(true);
         setNewIngredient('');
