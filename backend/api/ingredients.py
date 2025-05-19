@@ -1,21 +1,37 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from firebase import db
 
-router = APIRouter()
+router = APIRouter(prefix="/households", tags=["Ingredients"])
 
+# Datenschema für eine einzelne Zutat
 class Ingredient(BaseModel):
     name: str
     quantity: str
 
-@router.post('/households/{household_id}/ingredients')
-def add_ingredient(household_id: str, ingredient: Ingredient):
-    ref = db.collection("households").document(household_id).collection("ingredients")
-    ref.add(ingredient.dict())
-    return {"message": "Ingredient added successfully"}
+# 💾 Temporärer In-Memory Speicher für Testzwecke
+mock_storage = {
+    "sl1cdzSAbdpV7eBVOoHv": []
+}
 
-@router.get('/households/{household_id}/ingredients')
-def get_ingredients(household_id: str):
-    ref = db.collection("households").document(household_id).collection("ingredients")
-    docs = ref.stream()
-    return [doc.to_dict() for doc in docs]
+# 🔹 POST: Neue Zutat hinzufügen
+@router.post("/{household_id}/ingredients")
+async def add_ingredient(household_id: str, ingredient: Ingredient):
+    if household_id != "sl1cdzSAbdpV7eBVOoHv":
+        raise HTTPException(status_code=404, detail="Only test household ID is supported")
+
+    mock_storage[household_id].append(ingredient.dict())
+    return {
+        "message": "Ingredient added successfully",
+        "ingredient": ingredient
+    }
+
+# 🔹 GET: Zutatenliste abrufen
+@router.get("/{household_id}/ingredients")
+async def get_ingredients(household_id: str):
+    if household_id != "sl1cdzSAbdpV7eBVOoHv":
+        raise HTTPException(status_code=404, detail="Only test household ID is supported")
+
+    return {
+        "household_id": household_id,
+        "ingredients": mock_storage[household_id]
+    }

@@ -8,9 +8,9 @@ import importlib.util
 
 from api.users import users
 from api.households import households
+from api.ingredients import router as ingredients_router
 
 current_script_dir = os.path.dirname(os.path.abspath(__file__)) # Get current "backend" directory
-
 # Construct the absolute path to predict.py
 # IMPORTANT: Ensure 'backend' and 'model' reflect the correct directory names
 # and structure relative to where your main.py resides.
@@ -60,6 +60,7 @@ app.add_middleware(
 # Existing router inclusions
 app.include_router(users.router)
 app.include_router(households.router)
+app.include_router(ingredients_router)
 
 @app.get("/")
 async def root():
