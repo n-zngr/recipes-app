@@ -16,23 +16,23 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const checkAuth = async () => {
-        try {
-            const response = await fetch('http://localhost:8000/users/me', {
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
+            try {
+                const response = await fetch('http://localhost:8000/api/users/me', {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    setIsAuthenticated(true);
+                } else {
+                    setIsAuthenticated(false);
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                setIsAuthenticated(false);
             }
-            });
-            
-            if (response.ok) {
-            setIsAuthenticated(true);
-            } else {
-            setIsAuthenticated(false);
-            }
-        } catch (error) {
-            console.error('Auth check failed:', error);
-            setIsAuthenticated(false);
-        }
         };
         checkAuth();
     }, []);
