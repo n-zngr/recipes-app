@@ -10,7 +10,6 @@ from api.users import users
 from api.households import households
 from api.ingredients import ingredients
 
-# Pfad zu predict.py setzen
 current_script_dir = os.path.dirname(os.path.abspath(__file__)) # Get current "backend" directory
 
 # Construct the absolute path to predict.py
