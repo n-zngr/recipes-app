@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -8,6 +8,7 @@ import importlib.util
 
 from api.users import users
 from api.households import households
+from api.ingredients import ingredients
 
 current_script_dir = os.path.dirname(os.path.abspath(__file__)) # Get current "backend" directory
 
@@ -21,6 +22,7 @@ if not os.path.exists(predict_module_path):
     print("Please ensure the path 'backend/model/predict.py' is correct relative to your main.py.")
     sys.exit(1)
 
+# --- Model loading logic ---
 # Load the module directly from its file path
 try:
     # Create a module specification
@@ -44,8 +46,6 @@ except Exception as e:
     predict = None
     sys.exit(1) # Exit the application if loading fails
 
-# --- END DIRECT MODULE LOADING ---
-
 
 app = FastAPI()
 
@@ -57,9 +57,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Existing router inclusions
-app.include_router(users.router)
-app.include_router(households.router)
+api_router = APIRouter(prefix="/api")
+api_router.include_router(users.router)
+api_router.include_router(households.router)
+api_router.include_router(ingredients.router)
+
+app.include_router(api_router)
 
 @app.get("/")
 async def root():
@@ -70,6 +73,7 @@ class RecommendationRequest(BaseModel):
     ingredients: list[str]
     top_n: int = 5
 
+# POST /recommend Endpoint (außerhalb von /api – das ist so gewollt)
 @app.post("/recommend")
 async def recommend_items(request: RecommendationRequest):
     """
