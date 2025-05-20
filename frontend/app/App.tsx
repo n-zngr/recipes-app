@@ -51,8 +51,7 @@ const App: React.FC = () => {
         setNewIngredient(e.target.value);
     };
 
-    // Zutat speichern (POST)
-    const commitNewIngredient = async () => {
+    const addNewIngredient = async () => {
         const trimmedIngredient = newIngredient.trim();
         if (trimmedIngredient && !ingredients.includes(trimmedIngredient)) {
             try {
@@ -83,7 +82,7 @@ const App: React.FC = () => {
     const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            commitNewIngredient();
+            addNewIngredient();
         } else if (e.key === 'Escape') {
             setNewIngredient('');
             setIsAddingIngredient(false);
@@ -93,7 +92,7 @@ const App: React.FC = () => {
     const handleInputBlur = (e: FocusEvent<HTMLInputElement>) => {
         setTimeout(() => {
             if (isAddingIngredient) {
-                commitNewIngredient();
+                addNewIngredient();
             }
         }, 150);
     };
