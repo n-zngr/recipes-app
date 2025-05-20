@@ -5,8 +5,7 @@
     "scripts": {
         "dev": "npm --prefix frontend run dev",
         "build": "npm --prefix frontend run build",
-        "serve": "npm --prefix frontend run preview",
-        "backend": "cd backend && uvicorn main:app --reload"
+        "serve": "npm --prefix frontend run preview"
     },
     "dependencies": {
         "recipes-app": "file:"
