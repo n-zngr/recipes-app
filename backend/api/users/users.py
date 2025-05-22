@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Response, Request
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
 from firebase import db
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -13,6 +12,7 @@ class User(BaseModel):
     email: str
     password: str
 
+'''
 def get_user_cookie(request: Request):
     user_id = request.cookies.get("user_id")
     if not user_id:
@@ -29,6 +29,7 @@ def get_household_id(request: Request):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Household ID not found"
         )
+'''
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_user(user: User, response: Response):
@@ -121,13 +122,5 @@ def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
             detail=f"An unexpected error occurred during login: {str(e)}"
         )
     
-@router.get("/me")
-def check_auth(request: Request):
-    user_id = request.cookies.get("user_id")
-    if not user_id:
-        raise HTTPException(
-            status_code=401,
-            detail="Not authenticated"
+            detail=f'An unexpected error occurred during login: {str(e)}'
         )
-    
-    return JSONResponse(content={"user_id": user_id})
