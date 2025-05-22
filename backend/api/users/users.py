@@ -81,46 +81,44 @@ def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
         
         user_id = user_doc.id
 
+        response.set_cookie(
+            key="user_id",
+            value=user_id,
+            httponly=False,
+            max_age=604800,
+            secure=False,
+            samesite="lax"
+        )
+
         households_ref = db.collection(HOUSEHOLDS_COLLECTION)
         household_query = households_ref.where('users', 'array_contains', user_id).limit(1).get()
 
-        if not household_query: 
-            raise HTTPException(
-                status_code=403,
-                detail=f"User does not belong to any household, {user_id}"
-            )
+        if not household_query:
+            return {
+                "message": "Login successful, onboarding required",
+                "user_id": user_id,
+                "onboard": True
+            }
+
         
         household_doc = household_query[0]
         household_id = household_doc.id
 
         response.set_cookie(
-            key="user_id",
-            value=user_id,
-            httponly=True,
+            key='household_id',
+            value=households_ref.id,
+            httponly=False,
             max_age=604800,
             secure=False,
             samesite="lax"
         )
-        
-        response.set_cookie(
-            key="household_id",
-            value=household_id,
-            httponly=True,
-            max_age=604800,
-            secure=False,
-            samesite="lax"
-        )
-        
-        return {"message": "Login successful", "user_id": user_id, "household_id": household_id}
+
+        return {"message": "Login successful", "user_id": user_id, "household_id": household_id, "onboard": False}
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
-        # Log exception for debugging
-        print(f"Error during login: {e}")
+        print(f'Error during login: {e}')
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred during login: {str(e)}"
-        )
-    
             detail=f'An unexpected error occurred during login: {str(e)}'
         )
