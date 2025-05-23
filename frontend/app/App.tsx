@@ -35,9 +35,9 @@ const App: React.FC = () => {
                 const data = await response.json();
 
                 if (response.ok) {
-                setIngredients(data.ingredients.map((i: any) => i.name));
+                    setIngredients(data.ingredients.map((i: any) => i.name));
                 } else {
-                console.error('Error fetching ingredients:', data);
+                    console.error('Error fetching ingredients:', data);
                 }
             } catch (err) {
                 console.error("Fehler beim Laden der Zutaten:", err);
@@ -59,9 +59,7 @@ const App: React.FC = () => {
                 try {
                 const response = await fetch('http://127.0.0.1:8000/recommend', {
                     method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ingredients }),
                 });
 
@@ -100,20 +98,20 @@ const App: React.FC = () => {
         if (trimmedIngredient && !ingredients.includes(trimmedIngredient)) {
             try {
                 const response = await fetch(`http://localhost:8000/api/households/ingredients`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    name: trimmedIngredient
-                })
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        name: trimmedIngredient
+                    })
                 });
 
                 if (response.ok) {
-                setIngredients(prev => [...prev, trimmedIngredient]);
+                    setIngredients(prev => [...prev, trimmedIngredient]);
                 } else {
-                console.error('Fehler beim Hinzufügen der Zutat:', await response.json());
+                    console.error('Fehler beim Hinzufügen der Zutat:', await response.json());
                 }
             } catch (error) {
                 console.error('Netzwerkfehler beim POST:', error);
