@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import Onboarding from './pages/Onboarding';
 
 const container = document.getElementById('root');
 if (!container) throw new Error('Failed to find the root element');
@@ -17,13 +18,13 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/users/me', {
+                const response = await fetch('http://localhost:8000/api/auth/', {
                     credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
                     }
                 });
-                
+
                 if (response.ok) {
                     setIsAuthenticated(true);
                 } else {
@@ -43,7 +44,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh'
-        }}>Loading...</div>;
+        }}>Authenticating...</div>;
     }
 
     return isAuthenticated ? children : <Navigate to="/login" replace />;
@@ -55,7 +56,8 @@ root.render(
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="/" element={ <AuthWrapper> <App /> </AuthWrapper> }/>
+                <Route path="/onboarding" element={<AuthWrapper><Onboarding /></AuthWrapper>} />
+                <Route path="/" element={<AuthWrapper><App /></AuthWrapper>} />
             </Routes>
         </BrowserRouter>
     </StrictMode>

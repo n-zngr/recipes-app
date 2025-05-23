@@ -7,6 +7,7 @@ import sys
 import importlib.util
 
 from api.users import users
+from api.users import auth
 from api.households import households
 from api.ingredients import ingredients
 
@@ -58,6 +59,7 @@ app.add_middleware(
 )
 
 api_router = APIRouter(prefix="/api")
+api_router.include_router(auth.router)
 api_router.include_router(users.router)
 api_router.include_router(households.router)
 api_router.include_router(ingredients.router)

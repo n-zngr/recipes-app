@@ -36,11 +36,14 @@ const Login = () => {
             }
 
             setSuccess('Login successful! Redirecting...');
-            
             setTimeout(() => {
-                window.location.href = '/';
+                if (data.onboard) {
+                    navigate('/onboarding');
+                } else {
+                    navigate(`/`);
+                }
             }, 1000);
-            
+
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Login failed');
         } finally {
@@ -50,12 +53,12 @@ const Login = () => {
 
     return (
         <div style={{ 
-        maxWidth: '400px', 
-        margin: '2rem auto', 
-        padding: '2rem',
-        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-        borderRadius: '8px',
-        backgroundColor: 'white'
+            maxWidth: '400px', 
+            margin: '2rem auto', 
+            padding: '2rem',
+            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+            borderRadius: '8px',
+            backgroundColor: 'white'
         }}>
         <h2 style={{ 
             textAlign: 'center', 

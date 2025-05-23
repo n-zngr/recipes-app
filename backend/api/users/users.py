@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Response, Request
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
 from firebase import db
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -13,6 +12,7 @@ class User(BaseModel):
     email: str
     password: str
 
+'''
 def get_user_cookie(request: Request):
     user_id = request.cookies.get("user_id")
     if not user_id:
@@ -29,6 +29,7 @@ def get_household_id(request: Request):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Household ID not found"
         )
+'''
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_user(user: User, response: Response):
@@ -80,54 +81,53 @@ def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
         
         user_id = user_doc.id
 
+        response.set_cookie(
+            key="user_id",
+            value=user_id,
+            httponly=False,
+            max_age=604800,
+            secure=False,
+            samesite="lax"
+        )
+
         households_ref = db.collection(HOUSEHOLDS_COLLECTION)
         household_query = households_ref.where('users', 'array_contains', user_id).limit(1).get()
 
-        if not household_query: 
-            raise HTTPException(
-                status_code=403,
-                detail=f"User does not belong to any household, {user_id}"
-            )
-        
+        if not household_query:
+            return {
+                "message": "Login successful, onboarding required",
+                "user_id": user_id,
+                "onboard": True
+            }
+
         household_doc = household_query[0]
         household_id = household_doc.id
 
         response.set_cookie(
-            key="user_id",
-            value=user_id,
-            httponly=True,
-            max_age=604800,
-            secure=False,
-            samesite="lax"
-        )
-        
-        response.set_cookie(
-            key="household_id",
+            key='household_id',
             value=household_id,
-            httponly=True,
+            httponly=False,
             max_age=604800,
             secure=False,
             samesite="lax"
         )
-        
-        return {"message": "Login successful", "user_id": user_id, "household_id": household_id}
+
+        return {"message": "Login successful", "user_id": user_id, "household_id": household_id, "onboard": False}
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
-        # Log exception for debugging
-        print(f"Error during login: {e}")
+        print(f'Error during login: {e}')
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred during login: {str(e)}"
+            detail=f'An unexpected error occurred during login: {str(e)}'
         )
     
-@router.get("/me")
-def check_auth(request: Request):
-    user_id = request.cookies.get("user_id")
-    if not user_id:
-        raise HTTPException(
-            status_code=401,
-            detail="Not authenticated"
-        )
+@router.get("/logout")
+def logout(response: Response):
+    try: 
+        response.delete_cookie('user_id')
+        response.delete_cookie('household_id')
+        return {'message': 'Logout successful'}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f'An error occurred during logout: {str(e)}')
     
-    return JSONResponse(content={"user_id": user_id})
