@@ -100,13 +100,12 @@ def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
                 "onboard": True
             }
 
-        
         household_doc = household_query[0]
         household_id = household_doc.id
 
         response.set_cookie(
             key='household_id',
-            value=households_ref.id,
+            value=household_id,
             httponly=False,
             max_age=604800,
             secure=False,
@@ -122,3 +121,13 @@ def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f'An unexpected error occurred during login: {str(e)}'
         )
+    
+@router.get("/logout")
+def logout(response: Response):
+    try: 
+        response.delete_cookie('user_id')
+        response.delete_cookie('household_id')
+        return {'message': 'Logout successful'}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f'An error occurred during logout: {str(e)}')
+    
