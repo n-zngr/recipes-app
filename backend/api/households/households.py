@@ -121,6 +121,45 @@ def get_household_users(request: Request):
 
     return response
 
+@router.post('/add-member')
+def add_member(request: Request, payload: dict):
+    household_id = request.cookies.get('household_id')
+    if not household_id:
+        raise HTTPException(status_code=401, detail='Missing household_id cookie')
+    
+    email = payload.get('email')
+    if not email:
+        raise HTTPException(status_code=400, detail='Email is required')
+    
+    user_query = db.collection(USERS_COLLECTION).where('email', '==', email).limit(1).get()
+    if not user_query:
+        raise HTTPException(status_code=404, detail='No user found with that email')
+    user_id = user_query[0].id
+
+    household_ref = db.collection(HOUSEHOLDS_COLLECTION).document(household_id)
+    household_doc = household_ref.get()
+    if not household_doc.exists:
+        raise HTTPException(status_code=404, detail='Household not found')
+
+    data = household_doc.to_dict()
+
+    if user_id in data.get('users', []):
+        raise HTTPException(status_code=409, detail='User already in household')
+
+    # Update members and users
+    updated_members = data.get('members', [])
+    updated_users = data.get('users', [])
+
+    updated_members.append(user_id)
+    updated_users.append(user_id)
+
+    household_ref.update({
+        'members': updated_members,
+        'users': updated_users
+    })
+
+    return { 'message': 'Member added successfully', 'user_id': user_id }
+
 @router.post('/promote')
 def promote_to_admin(request: Request, payload: dict):
     household_id = request.cookies.get('household_id')
