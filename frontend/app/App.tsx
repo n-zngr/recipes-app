@@ -3,10 +3,11 @@ import { Home, Plus, Edit, Settings, Trash2 } from "lucide-react";
 import recipe_book from "./assets/recipe-book.svg";
 
 interface Recipe {
-    id: number;
-    title: string;
-    ingredients: string[]
-    instructions: string;
+  id: number;
+  Name: string;
+  Ingredients: string;
+  Instructions: string;
+  Url: string;
 }
 
 const App: React.FC = () => {
@@ -15,6 +16,7 @@ const App: React.FC = () => {
     const [isAddingIngredient, setIsAddingIngredient] = useState<boolean>(false);
     const ingredientInputRef = useRef<HTMLInputElement>(null);
     const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [recipeFetchError, setRecipeFetchError] = useState<string | null>(null);
 
     const getCookie = (name: string): string | null => {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -31,7 +33,7 @@ const App: React.FC = () => {
                 });
 
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     setIngredients(data.ingredients.map((i: any) => i.name));
                 } else {
@@ -50,6 +52,37 @@ const App: React.FC = () => {
             ingredientInputRef.current.focus();
         }
     }, [isAddingIngredient]);
+
+    useEffect(() => {
+        const fetchRecipes = async () => {
+            if (ingredients.length > 0) {
+                try {
+                const response = await fetch('http://127.0.0.1:8000/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ingredients }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setRecipes(data.recommendations);
+                    setRecipeFetchError(null);
+                } else {
+                    console.error('Fehler beim Abrufen der Rezepte:', response);
+                    setRecipeFetchError('Fehler beim Abrufen der Rezepte. Bitte versuche es später noch einmal.');
+                }
+                } catch (error) {
+                    console.error('Netzwerkfehler beim Abrufen der Rezepte:', error);
+                    setRecipeFetchError('Netzwerkfehler beim Abrufen der Rezepte. Bitte überprüfe deine Verbindung.');
+                }
+            } else {
+                setRecipes([]);
+                setRecipeFetchError(null); // Clear any previous errors when ingredients are empty
+            }
+        };
+
+        fetchRecipes();
+    }, [ingredients]);
 
     const handleShowInput = () => {
         setIsAddingIngredient(true);
@@ -139,74 +172,81 @@ const App: React.FC = () => {
                     <div className="flex shrink-0 items-center justify-between rounded-t-md bg-brown p-2 pb-2 text-white">
                         <h2 className="font-medium">Zutatenliste</h2>
                         <button
-                            onClick={handleShowInput}
-                            className="w-6 h-6 flex items-center justify-center bg-green hover:bg-white border border-brown/50 text-xl font-semibold text-white hover:text-brown rounded-sm transition-colors duration-200 focus:outline-none"
-                            aria-label="Add new ingredient"
+                        onClick={handleShowInput}
+                        className="w-6 h-6 flex items-center justify-center bg-green hover:bg-white border border-brown/50 text-xl font-semibold text-white hover:text-brown rounded-sm transition-colors duration-200 focus:outline-none"
+                        aria-label="Add new ingredient"
                         >
-                            <Plus size="16px" />
+                        <Plus size="16px" />
                         </button>
                     </div>
 
                     {isAddingIngredient && (
                         <div className="shrink-0 px-2">
-                            <input
-                                type="text"
-                                ref={ingredientInputRef}
-                                value={newIngredient}
-                                onChange={handleNewIngredientChange}
-                                onKeyDown={handleInputKeyDown}
-                                onBlur={handleInputBlur}
-                                placeholder="Neue Zutat"
-                                className="w-full px-2 py-2 mt-2 text-sm focus:ring-0 focus:outline-none transition-colors duration-200 border-b border-brown"
-                            />
+                        <input
+                            type="text"
+                            ref={ingredientInputRef}
+                            value={newIngredient}
+                            onChange={handleNewIngredientChange}
+                            onKeyDown={handleInputKeyDown}
+                            onBlur={handleInputBlur}
+                            placeholder="Neue Zutat"
+                            className="w-full px-2 py-2 mt-2 text-sm focus:ring-0 focus:outline-none transition-colors duration-200 border-b border-brown"
+                        />
                         </div>
                     )}
 
                     <ul className="flex-grow space-y-2 overflow-y-auto p-2">
                         {ingredients.map((ingredient, index) => (
-                            <li
-                                key={index}
-                                className="group flex items-center justify-between px-2 py-2 text-sm border border-brown rounded-sm hover:shadow-sm shadow-brown/25 transition-all duration-200"
+                        <li
+                            key={index}
+                            className="group flex items-center justify-between px-2 py-2 text-sm border border-brown rounded-sm hover:shadow-sm shadow-brown/25 transition-all duration-200"
+                        >
+                            <p>{ingredient}</p>
+                            <div className="flex items-center">
+                            <button
+                                onClick={() => deleteIngredient(ingredient)}
+                                className="text-brown hover:text-red-700 group-hover:opacity-100 group-hover:-translate-x-1 translate-x-4 opacity-0 transition-all duration-200"
+                                aria-label='Delete ingredient'
                             >
-                                <p>{ingredient}</p>
-                                <div className="flex items-center">
-                                    <button
-                                        onClick={() => deleteIngredient(ingredient)} 
-                                        className="text-brown hover:text-red-700 group-hover:opacity-100 group-hover:-translate-x-1 translate-x-4 opacity-0 transition-all duration-200"
-                                        aria-label='Delete ingredient'
-                                    >
-                                        <Trash2 size="16px" />
-                                    </button>
-                                    <button className="text-brown hover:text-green-dark group-hover:opacity-100 opacity-0 transition-all duration-200">
-                                        <Edit size="16px" />
-                                    </button>
-                                </div>
-                            </li>
+                                <Trash2 size="16px" />
+                            </button>
+                            <button className="text-brown hover:text-green-dark group-hover:opacity-100 opacity-0 transition-all duration-200">
+                                <Edit size="16px" />
+                            </button>
+                            </div>
+                        </li>
                         ))}
                         {ingredients.length === 0 && !isAddingIngredient && (
-                            <div className="flex flex-col justify-center items-center">
-                                <img className="p-4" src={recipe_book} alt="" />
-                                <p className="mt-4 text-sm text-center">Füge deine erste Zutat hinzu.</p>
-                            </div>
+                        <div className="flex flex-col justify-center items-center">
+                            <img className="p-4" src={recipe_book} alt="" />
+                            <p className="mt-4 text-sm text-center">Füge deine erste Zutat hinzu.</p>
+                        </div>
                         )}
                     </ul>
                 </aside>
 
-                <main className="flex-1 p-6 overflow-y-auto"> 
+                <main className="flex-1 p-6 overflow-y-auto">
                     <div className="max-w-3xl mx-auto space-y-6">
+                        {recipeFetchError && (
+                            <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                                {recipeFetchError}
+                            </div>
+                        )}
+
                         {recipes.length > 0 ? (
-                            recipes.map((recipe) => (
-                                <div key={recipe.id} className="p-4 border border-brown rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200">
+                            recipes.map((recipe, index) => (
+                                <div key={index} className="p-4 border border-brown rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200">
                                     <h3 className="pb-2 mb-3 text-2xl border-b border-brown">
-                                        {recipe.title}
+                                        {recipe.Name}
                                     </h3>
                                     <div className="mb-3">
-                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown uppercase">Key Ingredients:</strong>
-                                        <p className="text-sm text-brown">{recipe.ingredients.join(', ')}</p>
+                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown uppercase">Zutaten:</strong>
+                                        <p className="text-sm text-brown">{recipe.Ingredients}</p>
                                     </div>
                                     <div>
-                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown uppercase">Method:</strong>
-                                        <p className="text-sm leading-relaxed text-brown">{recipe.instructions}</p>
+                                        <strong className="block mb-1 text-xs font-medium tracking-wide text-brown uppercase">Zubereitung:</strong>
+                                        <p className="text-sm leading-relaxed text-brown">{recipe.Instructions}</p>
+                                        <a href={recipe.Url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Zum Rezept</a>
                                     </div>
                                 </div>
                             ))
