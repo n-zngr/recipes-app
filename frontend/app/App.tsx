@@ -16,13 +16,22 @@ const App: React.FC = () => {
     const ingredientInputRef = useRef<HTMLInputElement>(null);
     const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-    const householdId = "sl1cdzSAbdpV7eBVOoHv";
+    const getCookie = (name: string): string | null => {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    };
+
+    const householdId = getCookie('household_id')
 
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/households/${householdId}/ingredients`);
+                const response = await fetch(`http://localhost:8000/api/households/ingredients`, {
+                    credentials: 'include'
+                });
+
                 const data = await response.json();
+                
                 if (response.ok) {
                     setIngredients(data.ingredients.map((i: any) => i.name));
                 } else {
@@ -55,14 +64,14 @@ const App: React.FC = () => {
         const trimmedIngredient = newIngredient.trim();
         if (trimmedIngredient && !ingredients.includes(trimmedIngredient)) {
             try {
-                const response = await fetch(`http://localhost:8000/api/households/${householdId}/ingredients`, {
+                const response = await fetch(`http://localhost:8000/api/households/ingredients`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
+                    credentials: 'include',
                     body: JSON.stringify({
-                        name: trimmedIngredient,
-                        quantity: '1 Stück'
+                        name: trimmedIngredient
                     })
                 });
 
