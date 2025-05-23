@@ -33,10 +33,8 @@ const Onboarding: React.FC = () => {
                 body: JSON.stringify({ name: householdName, member_emails: userEmails })
             });
 
-            const data = await response.json();
-
             if (response.ok) {
-                navigate(`/${data.household_id}`);
+                navigate(`/`);
             } else {
                 alert('Failed to create household: Line 40 Onboarding.tsx');
             }
