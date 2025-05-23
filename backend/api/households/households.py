@@ -64,6 +64,55 @@ def create_household(request: Request, household: Household):
         samesite="lax"
     )
     return response
+
+@router.get('/admin')
+def check_admin(request: Request): 
+    household_id = request.cookies.get('household_id')
+    user_id = request.cookies.get('user_id')
+
+    if not household_id or not user_id:
+        raise HTTPException(status_code=401, detail='Missing cookies')
+    
+    household_ref = db.collection(HOUSEHOLDS_COLLECTION).document(household_id)
+    household_doc = household_ref.get()
+
+    if not household_doc.exists:
+        raise HTTPException(status_code=404, detail='Household not found')
+    
+    data = household_doc.to_dict()
+
+    if user_id == data.get('owner') or user_id in data.get('admins', []):
+        return { 'authorized': True }
+
+    return { 'authorized': False }
+
+@router.get('/users')
+def get_household_users(request: Request): 
+    household_id = request.cookies.get('household_id')
+
+    if not household_id:
+        raise HTTPException(status_code=401, detail='Missing household_id cookie')
+
+    household_ref = db.collection(HOUSEHOLDS_COLLECTION).document(household_id)
+    household_doc = household_ref.get()
+
+    if not household_doc.exists:
+        raise HTTPException(status_code=404, detail='Household not found')
+
+    data = household_doc.to_dict()
+    user_ids = data.get('users', [])
+
+    users_data = []
+    for user_id in user_ids:
+        user_ref = db.collection(USERS_COLLECTION).document(user_id)
+        user_doc = user_ref.get()
+        if user_doc.exists:
+            user = user_doc.to_dict()
+            users_data.append({ "id": user_id, "email": user.get("email", "unknown") })
+
+    return { "users": users_data }
+
+
 '''
 @router.delete("/{name}")
 def delete_household(name: str): 
