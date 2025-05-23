@@ -100,17 +100,71 @@ def get_household_users(request: Request):
         raise HTTPException(status_code=404, detail='Household not found')
 
     data = household_doc.to_dict()
-    user_ids = data.get('users', [])
-
-    users_data = []
-    for user_id in user_ids:
+    
+    def get_user_info(user_id): 
         user_ref = db.collection(USERS_COLLECTION).document(user_id)
         user_doc = user_ref.get()
         if user_doc.exists:
-            user = user_doc.to_dict()
-            users_data.append({ "id": user_id, "email": user.get("email", "unknown") })
+            user_data = user_doc.to_dict()
+            return { 'id': user_id, 'email': user_data.get('email', 'unknown') }
+        return None
+    
+    owner_id = data.get('owner')
+    admins = data.get('admins', [])
+    members = data.get('members', [])
 
-    return { "users": users_data }
+    response = {
+        'owner': get_user_info(owner_id),
+        'admins': [user for user in [get_user_info(userId) for userId in admins] if user],
+        'members': [user for user in [get_user_info(userId) for userId in members] if user]
+    }
+
+    return response
+
+@router.post('/promote')
+def promote_to_admin(request: Request, payload: dict):
+    household_id = request.cookies.get('household_id')
+    user_id = payload.get('user_id')
+
+    household_ref = db.collection(HOUSEHOLDS_COLLECTION).document(household_id)
+    household_doc = household_ref.get()
+    if not household_doc.exists:
+        raise HTTPException(status_code=404, detail='Household not found')
+    
+    data = household_doc.to_dict()
+    if user_id in data.get('members', []):
+        data['members'].remove(user_id)
+        data['admins'].append(user_id)
+        household_ref.update({ 'members': data['members'], 'admins': data['admins'] })
+        return { 'message': 'User promoted to admin' }
+    raise HTTPException(status_code=404, detail='User is not a member')
+
+@router.post('/demote')
+def demote_to_member(request: Request, payload: dict):
+    household_id = request.cookies.get('household_id')
+    user_id = payload.get('user_id')
+
+    household_ref = db.collection(HOUSEHOLDS_COLLECTION).document(household_id)
+    household_doc = household_ref.get()
+    if not household_doc.exists:
+        raise HTTPException(status_code=404, detail='Household not found')
+    
+    data = household_doc.to_dict()
+    
+    if user_id == data.get('owner'):
+        raise HTTPException(status_code=403, detail='Cannot remove owner')
+    
+    for role in ['admins', 'members', 'users']:
+        if user_id in data.get(role, []):
+            data[role].remove(user_id)
+
+    household_ref.update({
+        'admins': data['admins'],
+        'members': data['members'],
+        'users': data['users']
+    })
+
+    return { 'message': 'User removed' }
 
 
 '''
