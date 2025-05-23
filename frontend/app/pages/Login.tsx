@@ -40,7 +40,7 @@ const Login = () => {
                 if (data.onboard) {
                     navigate('/onboarding');
                 } else {
-                    navigate(`/${data.household_id}`);
+                    navigate(`/`);
                 }
             }, 1000);
 
