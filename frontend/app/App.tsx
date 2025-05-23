@@ -130,7 +130,9 @@ const App: React.FC = () => {
                     <Home size="24px" strokeWidth={1}/>
                 </div>
                 <h1 className="font-light">Household</h1>
-                <Settings className="ml-auto mr-4" size="24px" strokeWidth={1} />
+                <a className="ml-auto" href="/admin">
+                    <Settings className="ml-auto mr-4" size="24px" strokeWidth={1} />
+                </a>
             </div>
             <div className="flex flex-1 overflow-hidden">
                 <aside className="w-72 flex flex-col ml-2 my-2 border rounded-lg">
