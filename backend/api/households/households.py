@@ -189,6 +189,24 @@ def demote_to_member(request: Request, payload: dict):
         raise HTTPException(status_code=404, detail='Household not found')
     
     data = household_doc.to_dict()
+    if user_id in data.get('admins', []):
+        data['admins'].remove(user_id)
+        data['members'].append(user_id)
+        household_ref.update({ 'admins': data['admins'], 'members': data['members'] })
+        return { 'message': 'User demoted to member' }
+    raise HTTPException(status_code=404, detail='User is not a member')
+
+@router.post('/remove')
+def remove_user(request: Request, payload: dict):
+    household_id = request.cookies.get('household_id')
+    user_id = payload.get('user_id')
+
+    household_ref = db.collection(HOUSEHOLDS_COLLECTION).document(household_id)
+    household_doc = household_ref.get()
+    if not household_doc.exists:
+        raise HTTPException(status_code=404, detail='Household not found')
+    
+    data = household_doc.to_dict()
     
     if user_id == data.get('owner'):
         raise HTTPException(status_code=403, detail='Cannot remove owner')
