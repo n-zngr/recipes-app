@@ -1,5 +1,5 @@
-import { Home, Crown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Home, Crown, Plus } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Admin: React.FC = () => {
@@ -8,6 +8,8 @@ const Admin: React.FC = () => {
     const [admins, setAdmins] = useState<{ id: string, email: string }[]>([]);
     const [members, setMembers] = useState<{ id: string, email: string }[]>([]);
     const [loading, setLoading] = useState(true);
+    const [newMemberEmail, setNewMemberEmail] = useState('');
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const checkAndFetch = async () => {
@@ -22,14 +24,7 @@ const Admin: React.FC = () => {
                     return;
                 }
 
-                const response = await fetch('http://localhost:8000/api/households/users', {
-                    credentials: 'include'
-                });
-
-                const data = await response.json();
-                setOwner(data.owner);
-                setAdmins(data.admins);
-                setMembers(data.members);
+                await refreshUsers();
             } catch (error) {
                 console.error('Error authenticating or fetching users:', error);
                 navigate('/');
@@ -40,6 +35,16 @@ const Admin: React.FC = () => {
 
         checkAndFetch();
     }, [navigate]);
+    
+    const refreshUsers = async () => {
+        const response = await fetch('http://localhost:8000/api/households/users', {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        setOwner(data.owner);
+        setAdmins(data.admins);
+        setMembers(data.members);
+    };
 
     const promoteUser = async (userId: string) => {
         await fetch('http://localhost:8000/api/households/promote', {
@@ -71,14 +76,27 @@ const Admin: React.FC = () => {
         refreshUsers();
     }
 
-    const refreshUsers = async () => {
-        const response = await fetch('http://localhost:8000/api/households/users', {
-            credentials: 'include'
-        });
-        const data = await response.json();
-        setOwner(data.owner);
-        setAdmins(data.admins);
-        setMembers(data.members);
+    const addMember = async () => {
+        if (!newMemberEmail.trim()) return;
+
+        try {
+            const response = await fetch('http://localhost:8000/api/households/add-member', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: newMemberEmail.trim() })
+            });
+
+            if (response.ok) {
+                setNewMemberEmail('');
+                await refreshUsers();
+            } else {
+                alert('User email does not exist');
+            }
+        } catch (error) {
+            console.error('Network error adding member', error);
+            alert('Network error');
+        }
     };
 
     return (
@@ -96,6 +114,28 @@ const Admin: React.FC = () => {
                 ) : (
                     <div className="max-w-xl mx-auto space-y-8">
 
+                        {/* Add Member */}
+                        <section>
+                            <h2 className="text-lg font-semibold mb-2">Add New Member</h2>
+                            <div className="flex gap-2">
+                                <input
+                                    ref={inputRef}
+                                    type="email"
+                                    value={newMemberEmail}
+                                    onChange={(e) => setNewMemberEmail(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && addMember()}
+                                    placeholder="Enter email"
+                                    className="flex-1 px-3 py-2 border border-brown rounded-md text-sm"
+                                />
+                                <button
+                                    onClick={addMember}
+                                    className="w-9 h-9 flex items-center justify-center bg-green text-white border border-brown rounded-md"
+                                >
+                                    <Plus size={16} />
+                                </button>
+                            </div>
+                        </section>
+
                         {/* Owner */}
                         <section>
                             <h2 className="text-xl font-semibold mb-2">Owner</h2>
@@ -104,10 +144,10 @@ const Admin: React.FC = () => {
                                     <li key={owner.id} className="flex items-center justify-between border border-brown p-3 rounded-md">
                                         <div>
                                             <p className="text-sm">{owner.email}</p>
-                                            <p className="text-xs text-gray-500">{owner.id}</p>
+                                            <p className="text-xs text-brown/50">{owner.id}</p>
                                         </div>
                                         <span className="text-xs text-yellow-600">
-                                            <Crown size={20} />
+                                            <Crown size={20}/>
                                         </span>
                                     </li>
                                 </ul>
@@ -122,7 +162,7 @@ const Admin: React.FC = () => {
                                     <li key={admin.id} className="flex items-center justify-between border border-brown p-3 rounded-md">
                                         <div>
                                             <p className="text-sm">{admin.email}</p>
-                                            <p className="text-xs text-gray-500">{admin.id}</p>
+                                            <p className="text-xs text-brown/50">{admin.id}</p>
                                         </div>
                                         <div className="flex gap-2">
                                             <button
@@ -151,7 +191,7 @@ const Admin: React.FC = () => {
                                     <li key={member.id} className="flex items-center justify-between border border-brown p-3 rounded-md">
                                         <div>
                                             <p className="text-sm">{member.email}</p>
-                                            <p className="text-xs text-gray-500">{member.id}</p>
+                                            <p className="text-xs text-brown/50">{member.id}</p>
                                         </div>
                                         <div className="flex gap-2">
                                             <button
