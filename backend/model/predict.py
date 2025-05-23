@@ -25,11 +25,11 @@ try:
 
         # Basic validation of types
         if not isinstance(_vectorizer, CountVectorizer):
-             print(f"Warning: Expected CountVectorizer at index 0, got {type(_vectorizer)}")
+            print(f"Warning: Expected CountVectorizer at index 0, got {type(_vectorizer)}")
         if not isinstance(_recipe_matrix_X, csr_matrix):
-             print(f"Warning: Expected csr_matrix at index 1, got {type(_recipe_matrix_X)}")
+            print(f"Warning: Expected csr_matrix at index 1, got {type(_recipe_matrix_X)}")
         if not isinstance(_recipes_df, pd.DataFrame):
-             print(f"Warning: Expected DataFrame at index 2, got {type(_recipes_df)}")
+            print(f"Warning: Expected DataFrame at index 2, got {type(_recipes_df)}")
 
     else:
         raise TypeError(f"Loaded data is not the expected tuple of 3 items. Type: {type(loaded_data)}")
@@ -37,7 +37,7 @@ try:
 except FileNotFoundError as e:
     print(f"CRITICAL ERROR loading file: {e}. Recommendation functionality will be disabled.")
 except TypeError as e:
-     print(f"CRITICAL ERROR during unpacking or type checking: {e}")
+    print(f"CRITICAL ERROR during unpacking or type checking: {e}")
 except Exception as e:
     print(f"CRITICAL ERROR during loading: {e}.")
     # Ensure variables are None if loading fails
@@ -47,7 +47,7 @@ except Exception as e:
 def recommend(ingredients: list[str], top_n: int = 5):
     """
     Recommends recipes based on cosine similarity between input ingredients
-    and recipes in the database.
+    and recipes in the database, including full instructions.
     """
     # Check if necessary components are loaded
     if _vectorizer is None or _recipe_matrix_X is None or _recipes_df is None:
@@ -94,9 +94,9 @@ def recommend(ingredients: list[str], top_n: int = 5):
         # .iloc is used for integer-location based indexing
         recommended_recipes_df = _recipes_df.iloc[top_n_indices]
 
-        # Convert relevant columns to a list of dictionaries or desired format
-        # Adjust columns based on your actual DataFrame structure
-        results = recommended_recipes_df[['Name', 'Url', 'Ingredients']].to_dict(orient='records') # Example columns
+        # Convert relevant columns to a list of dictionaries
+        # Now including 'Instructions'
+        results = recommended_recipes_df[['Name', 'Url', 'Ingredients', 'Instructions']].to_dict(orient='records')
 
         return results
 
@@ -105,3 +105,20 @@ def recommend(ingredients: list[str], top_n: int = 5):
         # import traceback # Uncomment for detailed error stack
         # print(traceback.format_exc()) # Uncomment for detailed error stack
         return [] # Return empty list on error
+
+# Example usage (if you want to test it here):
+if __name__ == '__main__':
+    if _recipes_df is not None:
+        print("\n--- Example Recommendation ---")
+        sample_ingredients = ["tomato", "onion", "garlic"]
+        recommendations = recommend(sample_ingredients)
+        if recommendations:
+            for recipe in recommendations:
+                print(f"\nName: {recipe['Name']}")
+                print(f"Url: {recipe['Url']}")
+                print(f"Ingredients: {recipe['Ingredients']}")
+                print(f"Instructions: {recipe['Instructions']}")
+        else:
+            print("No recommendations found.")
+    else:
+        print("Model data not loaded. Cannot run example.")
