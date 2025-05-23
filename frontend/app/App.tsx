@@ -106,6 +106,23 @@ const App: React.FC = () => {
         }, 150);
     };
 
+    const deleteIngredient = async (ingredientName: string) => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/households/ingredients/${encodeURIComponent(ingredientName)}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                setIngredients(prev => prev.filter(i => i !== ingredientName));
+            } else {
+                console.error('Error deleting ingredient: ', await response.json());
+            }
+        } catch (error) {
+            console.error('Network error while deleting', error);
+        }
+    };
+
     return (
         <div className="flex flex-col h-screen bg-white text-brown border-brown/50 antialiased overflow-hidden">
             <div className="w-full h-16 flex gap-4 items-center pl-4 border-b shrink-0">
@@ -151,7 +168,11 @@ const App: React.FC = () => {
                             >
                                 <p>{ingredient}</p>
                                 <div className="flex items-center">
-                                    <button className="text-brown hover:text-red-700 group-hover:opacity-100 group-hover:-translate-x-1 translate-x-4 opacity-0 transition-all duration-200">
+                                    <button
+                                        onClick={() => deleteIngredient(ingredient)} 
+                                        className="text-brown hover:text-red-700 group-hover:opacity-100 group-hover:-translate-x-1 translate-x-4 opacity-0 transition-all duration-200"
+                                        aria-label='Delete ingredient'
+                                    >
                                         <Trash2 size="16px" />
                                     </button>
                                     <button className="text-brown hover:text-green-dark group-hover:opacity-100 opacity-0 transition-all duration-200">
