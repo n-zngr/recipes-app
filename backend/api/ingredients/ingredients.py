@@ -49,3 +49,27 @@ def add_ingredient(request: Request, ingredient: Ingredient):
     household_ref.update({'ingredients': ingredients})
 
     return { 'message': 'Ingredient added successfully', 'ingredient': ingredient }
+
+@router.delete('/ingredients/{ingredient_name}')
+def delete_ingredient(request: Request, ingredient_name: str):
+    household_id = request.cookies.get('household_id')
+    if not household_id: 
+        raise HTTPException(status_code=401, detail='Missing household_id cookie')
+    
+    household_ref = db.collection(HOUSEHOLDS_COLLECTION).document(household_id)
+    household_doc = household_ref.get()
+
+    if not household_doc.exists:
+        raise HTTPException(status_code=404, detail='Household not found')
+    
+    household_data = household_doc.to_dict()
+    ingredients = household_data.get('ingredients', [])
+
+    updated_ingredients = [item for item in ingredients if item.get('name') != ingredient_name]
+
+    if len(updated_ingredients) == len(ingredients):
+        raise HTTPException(status_code=404, detail='Ingredient not found')
+    
+    household_ref.update({ 'ingredients': updated_ingredients })
+
+    return { 'message': 'Ingredient successfully deleted', 'deleted': ingredient_name }

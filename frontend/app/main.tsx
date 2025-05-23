@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import Admin from './pages/Admin';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Onboarding from './pages/Onboarding';
@@ -58,6 +59,7 @@ root.render(
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/onboarding" element={<AuthWrapper><Onboarding /></AuthWrapper>} />
                 <Route path="/" element={<AuthWrapper><App /></AuthWrapper>} />
+                <Route path="/admin" element={<Admin />} />
             </Routes>
         </BrowserRouter>
     </StrictMode>
