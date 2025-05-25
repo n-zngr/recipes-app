@@ -1,4 +1,4 @@
-import { Home, Crown, Plus } from "lucide-react";
+import { Home, Crown, Plus, ArrowRight } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -106,6 +106,10 @@ const Admin: React.FC = () => {
                     <Home size="24px" strokeWidth={1} />
                 </div>
                 <h1 className="font-light">Household Admin</h1>
+
+                <a href="/" className="ml-auto mr-4 h-8 w-8 flex justify-center items-center border border-brown rounded-md hover:bg-brown hover:text-white transition">
+                    <ArrowRight />
+                </a>
             </div>
 
             <div className="p-6 overflow-y-auto">
