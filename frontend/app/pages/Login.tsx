@@ -37,11 +37,7 @@ const Login = () => {
 
             setSuccess('Login successful! Redirecting...');
             setTimeout(() => {
-                if (data.onboard) {
-                    navigate('/onboarding');
-                } else {
-                    navigate(`/`);
-                }
+                navigate('/onboarding')
             }, 1000);
 
         } catch (err) {

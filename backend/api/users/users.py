@@ -90,29 +90,7 @@ def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
             samesite="lax"
         )
 
-        households_ref = db.collection(HOUSEHOLDS_COLLECTION)
-        household_query = households_ref.where('users', 'array_contains', user_id).limit(1).get()
-
-        if not household_query:
-            return {
-                "message": "Login successful, onboarding required",
-                "user_id": user_id,
-                "onboard": True
-            }
-
-        household_doc = household_query[0]
-        household_id = household_doc.id
-
-        response.set_cookie(
-            key='household_id',
-            value=household_id,
-            httponly=False,
-            max_age=604800,
-            secure=False,
-            samesite="lax"
-        )
-
-        return {"message": "Login successful", "user_id": user_id, "household_id": household_id, "onboard": False}
+        return {"message": "Login successful", "user_id": user_id }
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:

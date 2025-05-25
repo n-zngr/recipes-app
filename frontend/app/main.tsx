@@ -40,12 +40,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     if (isAuthenticated === null) {
-        return <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh'
-        }}>Authenticating...</div>;
+        return <div className='flex justify-center items-center h-screen bg-white'>Authenticating...</div>;
     }
 
     return isAuthenticated ? children : <Navigate to="/login" replace />;

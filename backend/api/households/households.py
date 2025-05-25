@@ -65,6 +65,25 @@ def create_household(request: Request, household: Household):
     )
     return response
 
+@router.get('/joined')
+def get_joined_households(request: Request):
+    user_id = request.cookies.get('user_id')
+    if not user_id:
+        raise HTTPException(status_code=401, detail='Missing userId cookie')
+    
+    households_ref = db.collection(HOUSEHOLDS_COLLECTION).stream()
+    joined = []
+    for doc in households_ref:
+        data = doc.to_dict()
+        if user_id in data.get('users', []):
+            joined.append({
+                'id': doc.id,
+                'name': data.get('name', 'Unnamed Household')
+            })
+
+    return joined
+
+
 @router.get('/admin')
 def check_admin(request: Request): 
     household_id = request.cookies.get('household_id')
