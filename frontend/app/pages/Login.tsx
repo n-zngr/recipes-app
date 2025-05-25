@@ -35,7 +35,7 @@ const Login = () => {
                 throw new Error(data.detail || 'Login failed');
             }
 
-            setSuccess('Login successful! Redirecting...');
+            setSuccess('Login erfolgreich. Weiterleitung...');
             setTimeout(() => {
                 navigate('/onboarding')
             }, 1000);
@@ -75,7 +75,7 @@ const Login = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 className="w-full px-3 py-2 border border-brown rounded-md text-sm"
-                                placeholder="Enter your email"
+                                placeholder="timo.vogel@ksb-sg.ch"
                             />
                             </div>
 
@@ -87,7 +87,7 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 className="w-full px-3 py-2 border border-brown rounded-md text-sm"
-                                placeholder="Enter your password"
+                                placeholder="einsehrs1cheresP@sswort"
                             />
                             </div>
 
@@ -96,13 +96,13 @@ const Login = () => {
                             disabled={loading}
                             className="w-full py-2 bg-brown text-white border border-brown rounded-md hover:bg-white hover:text-brown transition"
                             >
-                            {loading ? 'Logging in...' : 'Login'}
+                            {loading ? 'Verarbeitet...' : 'Login'}
                         </button>
                     </form>
 
                     <div className="text-sm text-center text-gray-600 pt-2">
-                        Don't have an account?{' '}
-                        <a href="/signup" className="text-brown font-medium hover:underline">
+                        Noch kein Konto?{' '}
+                        <a href="/register" className="text-brown font-medium hover:underline">
                             Sign up
                         </a>
                     </div>

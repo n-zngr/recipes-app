@@ -130,11 +130,11 @@ const Onboarding: React.FC = () => {
                 )}
 
                 {mode === 'join' && (
-                    <div className="w-full max-w-3xl space-y-4">
+                    <div className="space-y-4">
                         <h2 className="text-lg font-semibold mb-2">Beitrittsfähige Haushalte</h2>
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="flex gap-4">
                             {joinedHouseholds.length === 0 && (
-                                <p className="col-span-3 text-center text-sm text-gray-500">Keine Haushalte verfügbar</p>
+                                <p className="text-center text-sm text-gray-500">Keine Haushalte verfügbar</p>
                             )}
                             {joinedHouseholds.map(h => (
                                 <div
@@ -143,7 +143,7 @@ const Onboarding: React.FC = () => {
                                     onClick={() => handleSelectHousehold(h.id)}
                                 >
                                     <h3 className="text-md font-medium">{h.name}</h3>
-                                    <p className="text-xs text-brown/70">ID: {h.id}</p>
+                                    <p className="text-xs text-brown/50">ID: {h.id}</p>
                                 </div>
                             ))}
                         </div>

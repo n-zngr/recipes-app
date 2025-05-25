@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, ChangeEvent, KeyboardEvent, FocusEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { Home, Plus, Edit, Settings, Trash2 } from "lucide-react";
 import recipe_book from "./assets/recipe-book.svg";
 
@@ -17,13 +18,9 @@ const App: React.FC = () => {
     const ingredientInputRef = useRef<HTMLInputElement>(null);
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [recipeFetchError, setRecipeFetchError] = useState<string | null>(null);
-
-    const getCookie = (name: string): string | null => {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
-    };
-
-    const householdId = getCookie('household_id')
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -156,6 +153,29 @@ const App: React.FC = () => {
         }
     };
 
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            document.cookie = "user_id=; Max-Age=0; path=/";
+            document.cookie = "household_id=; Max-Age=0; path=/";
+
+            setTimeout(() => {
+                navigate('/login');
+            }, 1000)
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
+    }
+
     return (
         <div className="flex flex-col h-screen bg-white text-brown border-brown/50 antialiased overflow-hidden">
             <div className="w-full h-16 flex gap-4 items-center pl-4 border-b shrink-0">
@@ -163,9 +183,32 @@ const App: React.FC = () => {
                     <Home size="24px" strokeWidth={1}/>
                 </div>
                 <h1 className="font-light">Household</h1>
-                <a className="ml-auto" href="/admin">
-                    <Settings className="ml-auto mr-4" size="24px" strokeWidth={1} />
-                </a>
+                <div className="relative ml-auto mr-4" ref={dropdownRef}>
+                    <button
+                        onClick={() => setShowDropdown(!showDropdown)}
+                        className="p-1 rounded-md hover:bg-brown/10 transition"
+                        aria-label="Open settings"
+                    >
+                        <Settings size="24px" strokeWidth={1} />
+                    </button>
+
+                    {showDropdown && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-brown rounded-md shadow-lg z-10">
+                            <button
+                                onClick={handleLogout}
+                                className="w-full px-4 py-2 text-left text-sm hover:bg-brown/10"
+                            >
+                                Logout
+                            </button>
+                            <button
+                                onClick={() => navigate("/admin")}
+                                className="w-full px-4 py-2 text-left text-sm hover:bg-brown/10"
+                            >
+                                Household Admin
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
             <div className="flex flex-1 overflow-hidden">
                 <aside className="w-72 flex flex-col ml-2 my-2 border rounded-lg">

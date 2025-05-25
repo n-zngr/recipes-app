@@ -12,25 +12,6 @@ class User(BaseModel):
     email: str
     password: str
 
-'''
-def get_user_cookie(request: Request):
-    user_id = request.cookies.get("user_id")
-    if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
-        )
-    return user_id
-
-def get_household_id(request: Request):
-    household_id = request.cookies.get("household_id")
-    if not household_id: 
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Household ID not found"
-        )
-'''
-
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_user(user: User, response: Response):
     try:
@@ -99,13 +80,3 @@ def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f'An unexpected error occurred during login: {str(e)}'
         )
-    
-@router.get("/logout")
-def logout(response: Response):
-    try: 
-        response.delete_cookie('user_id')
-        response.delete_cookie('household_id')
-        return {'message': 'Logout successful'}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f'An error occurred during logout: {str(e)}')
-    

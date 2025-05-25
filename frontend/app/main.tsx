@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import Admin from './pages/Admin';
-import Signup from './pages/Signup';
+import Register from './pages/Register';
 import Login from './pages/Login';
 import Onboarding from './pages/Onboarding';
 
@@ -51,7 +51,7 @@ root.render(
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/onboarding" element={<AuthWrapper><Onboarding /></AuthWrapper>} />
                 <Route path="/" element={<AuthWrapper><App /></AuthWrapper>} />
                 <Route path="/admin" element={<Admin />} />
