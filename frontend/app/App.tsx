@@ -22,13 +22,6 @@ const App: React.FC = () => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
-    const getCookie = (name: string): string | null => {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
-    };
-
-    // const householdId = getCookie('household_id')
-
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
