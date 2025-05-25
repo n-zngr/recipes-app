@@ -38,45 +38,61 @@ const Signup = () => {
     };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '2rem auto', padding: '2rem', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
-      <h2 style={{ textAlign: 'center' }}>Registrieren</h2>
-      {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>Passwort:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ width: '100%', padding: '0.75rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          {loading ? 'Wird verarbeitet...' : 'Registrieren'}
-        </button>
-      </form>
+        <div className="flex flex-col h-screen bg-white text-brown border-brown/50 antialiased overflow-hidden">
+            <div className="w-full h-16 flex items-center pl-4 border-b shrink-0">
+                <h1 className="text-xl font-light">Registrieren</h1>
+            </div>
 
-      <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-        Bereits ein Konto? <a href="/login" style={{ color: '#007bff' }}>Anmelden</a>
-      </div>
-    </div>
-  );
+            <main className="flex-1 p-6 overflow-y-auto flex flex-col items-center justify-center">
+                <div className="w-full max-w-md border border-brown rounded-lg p-6 space-y-4">
+                    {error && (
+                        <div className="bg-red-500 text-white text-sm px-4 py-2 rounded-md text-center">
+                        {error}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm mb-1">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="w-full px-3 py-2 border border-brown rounded-md text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm mb-1">Passwort</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full px-3 py-2 border border-brown rounded-md text-sm"
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-2 bg-brown text-white border border-brown rounded-md hover:bg-white hover:text-brown transition"
+                            >
+                            {loading ? 'Wird verarbeitet...' : 'Registrieren'}
+                        </button>
+                    </form>
+
+                    <div className="text-sm text-center text-gray-600 pt-2">
+                            Bereits ein Konto?{' '}
+                        <a href="/login" className="text-brown font-medium hover:underline">
+                            Anmelden
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
 };
 
 export default Signup;

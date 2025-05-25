@@ -48,138 +48,66 @@ const Login = () => {
     };
 
     return (
-        <div style={{ 
-            maxWidth: '400px', 
-            margin: '2rem auto', 
-            padding: '2rem',
-            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-            borderRadius: '8px',
-            backgroundColor: 'white'
-        }}>
-        <h2 style={{ 
-            textAlign: 'center', 
-            marginBottom: '1.5rem',
-            color: '#333'
-        }}>
-            Login
-        </h2>
-        
-        {error && (
-            <div style={{ 
-            color: 'white',
-            backgroundColor: '#ff4444',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            textAlign: 'center'
-            }}>
-            {error}
+        <div className="flex flex-col h-screen bg-white text-brown border-brown/50 antialiased overflow-hidden">
+            <div className="w-full h-16 flex items-center pl-4 border-b shrink-0">
+                <h1 className="text-xl font-light">Login</h1>
             </div>
-        )}
-        
-        {success && (
-            <div style={{ 
-            color: 'white',
-            backgroundColor: '#00C851',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            textAlign: 'center'
-            }}>
-            {success}
-            </div>
-        )}
-        
-        <form onSubmit={handleLogin}>
-            <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ 
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-                color: '#555'
-            }}>
-                Email:
-            </label>
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{ 
-                width: '100%', 
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box'
-                }}
-                placeholder="Enter your email"
-            />
-            </div>
-            
-            <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ 
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-                color: '#555'
-            }}>
-                Password:
-            </label>
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                style={{ 
-                width: '100%', 
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box'
-                }}
-                placeholder="Enter your password"
-            />
-            </div>
-            
-            <button
-            type="submit"
-            disabled={loading}
-            style={{ 
-                width: '100%',
-                padding: '0.75rem',
-                backgroundColor: loading ? '#6c757d' : '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                fontWeight: '500',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                transition: 'background-color 0.2s'
-            }}
-            >
-            {loading ? 'Logging in...' : 'Login'}
-            </button>
-        </form>
 
-        <div style={{ 
-            marginTop: '1.5rem', 
-            textAlign: 'center',
-            color: '#666'
-        }}>
-            Don't have an account?{' '}
-            <a 
-            href="/signup" 
-            style={{ 
-                color: '#007bff',
-                textDecoration: 'none',
-                fontWeight: '500'
-            }}
-            >
-            Sign up
-            </a>
-        </div>
+            <main className="flex-1 p-6 overflow-y-auto flex flex-col items-center justify-center">
+                <div className="w-full max-w-md border border-brown rounded-lg p-6 space-y-4">
+                    {error && (
+                        <div className="bg-red-500 text-white text-sm px-4 py-2 rounded-md text-center">
+                            {error}
+                        </div>
+                    )}
+                    {success && (
+                        <div className="bg-green text-white text-sm px-4 py-2 rounded-md text-center">
+                            {success}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <div>
+                            <label className="block text-sm mb-1">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="w-full px-3 py-2 border border-brown rounded-md text-sm"
+                                placeholder="Enter your email"
+                            />
+                            </div>
+
+                            <div>
+                            <label className="block text-sm mb-1">Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full px-3 py-2 border border-brown rounded-md text-sm"
+                                placeholder="Enter your password"
+                            />
+                            </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-2 bg-brown text-white border border-brown rounded-md hover:bg-white hover:text-brown transition"
+                            >
+                            {loading ? 'Logging in...' : 'Login'}
+                        </button>
+                    </form>
+
+                    <div className="text-sm text-center text-gray-600 pt-2">
+                        Don't have an account?{' '}
+                        <a href="/signup" className="text-brown font-medium hover:underline">
+                            Sign up
+                        </a>
+                    </div>
+                </div>
+            </main>
         </div>
     );
 };
