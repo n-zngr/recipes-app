@@ -40,7 +40,7 @@ const Signup = () => {
   return (
         <div className="flex flex-col h-screen bg-white text-brown border-brown/50 antialiased overflow-hidden">
             <div className="w-full h-16 flex items-center pl-4 border-b shrink-0">
-                <h1 className="text-xl font-light">Registrieren</h1>
+                <h1 className="text-xl font-light">Register</h1>
             </div>
 
             <main className="flex-1 p-6 overflow-y-auto flex flex-col items-center justify-center">
@@ -60,6 +60,7 @@ const Signup = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 className="w-full px-3 py-2 border border-brown rounded-md text-sm"
+                                placeholder="joern.steffen@ksb-sg.ch"
                             />
                         </div>
 
@@ -71,6 +72,7 @@ const Signup = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 className="w-full px-3 py-2 border border-brown rounded-md text-sm"
+                                placeholder="einsehrs1cheresP@sswort"
                             />
                         </div>
 
@@ -79,14 +81,14 @@ const Signup = () => {
                             disabled={loading}
                             className="w-full py-2 bg-brown text-white border border-brown rounded-md hover:bg-white hover:text-brown transition"
                             >
-                            {loading ? 'Wird verarbeitet...' : 'Registrieren'}
+                            {loading ? 'Verarbeitet...' : 'Register'}
                         </button>
                     </form>
 
                     <div className="text-sm text-center text-gray-600 pt-2">
-                            Bereits ein Konto?{' '}
+                            Already have an account?{' '}
                         <a href="/login" className="text-brown font-medium hover:underline">
-                            Anmelden
+                            Login
                         </a>
                     </div>
                 </div>
