@@ -12,25 +12,6 @@ class User(BaseModel):
     email: str
     password: str
 
-'''
-def get_user_cookie(request: Request):
-    user_id = request.cookies.get("user_id")
-    if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
-        )
-    return user_id
-
-def get_household_id(request: Request):
-    household_id = request.cookies.get("household_id")
-    if not household_id: 
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Household ID not found"
-        )
-'''
-
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_user(user: User, response: Response):
     try:
