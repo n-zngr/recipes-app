@@ -20,7 +20,9 @@ This section should improve consistency of the API across the project. Released 
 All api routes are located under the `/backend/api/` directory.
 ## Users
 > [!NOTE] Information
+> 
 > Directory: `/users`
+>
 > File: `users.py`
 > 
 > Routes: `GET`, `POST`, `DELETE`
@@ -51,8 +53,11 @@ All api routes are located under the `/backend/api/` directory.
 ## Households
 
 > [!NOTE] Information
+>
 > Directory: `[/backend/api/households/](/backend/api/households/)`
+>
 > File: `[/backend/api/households/households.py](/backend/api/households/households.py)`
+>
 > Routes: `GET`, `POST`
 
 ### `GET /households/`
