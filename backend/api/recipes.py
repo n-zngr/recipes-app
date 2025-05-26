@@ -1,5 +1,5 @@
 # api/recipes.py (Should be mostly correct already)
-
+'''
 from fastapi import APIRouter
 from pydantic import BaseModel
 from model.predict import recommend # Make sure this path is correct
@@ -18,3 +18,4 @@ def recommend_recipes(req: IngredientRequest):
     results = recommend(req.ingredients)
     # Returns the results from the recommend function
     return {"recipes": results}
+'''
