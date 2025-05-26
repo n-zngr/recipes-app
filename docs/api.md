@@ -16,9 +16,9 @@ This section should improve consistency of the API across the project. Released 
     - For example, all basic level user functions, like getting users `GET`, creating new users `POST`, deleting users `DELETE` should be inside the same `users.py` file. There should not be individual files for `create_user.py`, `get_users.py`, etc.  
 
 
-## API Routes
+# API Routes
 All api routes are located under the `/backend/api/` directory.
-### Users
+## Users
 > [!NOTE] Information
 > Directory: `/users`
 > File: `users.py`
@@ -48,21 +48,186 @@ All api routes are located under the `/backend/api/` directory.
 **POST**
 - Creates a new user with `email` and `password`.
 
-### Households
+## Households
 > [!NOTE] Information
 > Directory: `[/backend/api/households/](/backend/api/households/)`
 > File: `[/backend/api/households/households.py](/backend/api/households/households.py)`
 > 
-> Routes: `GET`, `POST`, `DELETE`
+> Routes: `GET`, `POST`
 
-**GET**
-- Returns a list of households, used for development.
+### `GET /households/`
 
-**POST**
-- Creates a new household with a `name` and an entry in the `users[]`
-- Checks if the userId passed exists in the database
-  - If not, it throws a 404 error
-  - If the userId exists in the database, it creates the household
+Returns a list of all households.
 
-**DELETE**
-- Deletes a household with the temporary `name` of the household, will need to be updated in the future.
+Mainly used for development and debugging purposes.
+
+```json
+[
+  {
+    "name": "someHousehold",
+    "owner": "userId",
+    "admins": [],
+    "members": ["user1234"],
+    "users": ["userId", "user1234"],
+    "ingredients": []
+  }
+]
+```
+
+### `POST /households/create`
+
+Creates a new household.
+
+Requires user authentication via user_id cookie.
+
+Accepts a list of member_emails to be added at creation.
+
+If any email does not match a user, the request will fail.
+
+```json
+{
+    "name": "New Household",
+    "member_emails": ["user1@example.com", "user2@example.com"]
+}
+
+**Response:**
+
+```json
+{
+  "message": "Household successfully created",
+  "household_id": "household123"
+}
+```
+
+Sets a household_id cookie for the session.
+
+### `GET /households/joined`
+
+Returns a list of all households the currently logged-in user has joined.
+
+```json
+[
+  {
+    "id": "abc123",
+    "name": "Household A"
+  },
+  {
+    "id": "def456",
+    "name": "Household B"
+  }
+]
+```
+
+### `GET /households/admin`
+
+Checks if the current user is an admin or the owner of the current household.
+
+Uses user_id and household_id cookies.
+
+```json
+{
+  "authorized": true
+}
+```
+
+### GET /households/users
+
+Returns all users in the current household, categorized by role.
+
+Uses household_id cookie.
+
+```json
+{
+  "owner": {
+    "id": "user123",
+    "email": "owner@example.com"
+  },
+  "admins": [
+    {
+      "id": "user124",
+      "email": "admin@example.com"
+    }
+  ],
+  "members": [
+    {
+      "id": "user125",
+      "email": "member@example.com"
+    }
+  ]
+}
+```
+
+### POST /households/add-member
+
+Adds a user to the current household via email.
+
+Requires household_id cookie.
+
+```json
+{
+  "email": "newmember@example.com"
+}
+```
+
+**Response**:
+
+```json
+{
+  "message": "Member added successfully",
+  "user_id": "user126"
+}
+```
+
+### POST /households/promote
+
+Promotes a member to an admin.
+
+```json
+{
+  "user_id": "user125"
+}
+```
+
+**Response**:
+```json
+{
+  "message": "User promoted to admin"
+}
+```
+
+### POST /households/demote
+
+Demotes an admin to a member.
+
+``````json
+{
+  "user_id": "user124"
+}
+```
+
+**Response**:
+
+``````json
+{
+  "message": "User demoted to member"
+}
+```
+
+### `POST /households/remove`
+
+Removes a user from the household.
+
+The owner cannot be removed.
+
+``````json
+{
+  "user_id": "user124"
+}
+```
+
+**Response**:
+``````json
+{
+  "message": "User removed"
+}
+```
