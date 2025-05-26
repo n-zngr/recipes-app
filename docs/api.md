@@ -89,6 +89,7 @@ If any email does not match a user, the request will fail.
     "name": "New Household",
     "member_emails": ["user1@example.com", "user2@example.com"]
 }
+```
 
 **Response:**
 
