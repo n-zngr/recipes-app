@@ -49,10 +49,10 @@ All api routes are located under the `/backend/api/` directory.
 - Creates a new user with `email` and `password`.
 
 ## Households
+
 > [!NOTE] Information
 > Directory: `[/backend/api/households/](/backend/api/households/)`
 > File: `[/backend/api/households/households.py](/backend/api/households/households.py)`
-> 
 > Routes: `GET`, `POST`
 
 ### `GET /households/`
@@ -220,14 +220,14 @@ Removes a user from the household.
 
 The owner cannot be removed.
 
-``````json
+```json
 {
   "user_id": "user124"
 }
 ```
 
 **Response**:
-``````json
+```json
 {
   "message": "User removed"
 }
