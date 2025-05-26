@@ -131,7 +131,7 @@ Uses user_id and household_id cookies.
 }
 ```
 
-### GET /households/users
+### `GET /households/users`
 
 Returns all users in the current household, categorized by role.
 
@@ -158,7 +158,7 @@ Uses household_id cookie.
 }
 ```
 
-### POST /households/add-member
+### `POST /households/add-member`
 
 Adds a user to the current household via email.
 
@@ -179,7 +179,7 @@ Requires household_id cookie.
 }
 ```
 
-### POST /households/promote
+### `POST /households/promote`
 
 Promotes a member to an admin.
 
@@ -196,11 +196,11 @@ Promotes a member to an admin.
 }
 ```
 
-### POST /households/demote
+### `POST /households/demote`
 
 Demotes an admin to a member.
 
-``````json
+```json
 {
   "user_id": "user124"
 }
@@ -208,7 +208,7 @@ Demotes an admin to a member.
 
 **Response**:
 
-``````json
+```json
 {
   "message": "User demoted to member"
 }
