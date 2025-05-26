@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, status, Response, Request
+from fastapi import APIRouter, HTTPException, Depends, status, Response
 from pydantic import BaseModel
 from firebase import db
 from fastapi.security import OAuth2PasswordRequestForm
