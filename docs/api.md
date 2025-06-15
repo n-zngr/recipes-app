@@ -19,7 +19,7 @@ This section should improve consistency of the API across the project. Released 
 # API Routes
 All api routes are located under the `/backend/api/` directory.
 ## Users
-> [!NOTE] Information
+> [!NOTE]
 > 
 > Directory: `/users`
 >
@@ -52,7 +52,7 @@ All api routes are located under the `/backend/api/` directory.
 
 ## Households
 
-> [!NOTE] Information
+> [!NOTE]
 >
 > Directory: `[/backend/api/households/](/backend/api/households/)`
 >
